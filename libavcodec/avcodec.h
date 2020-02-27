@@ -1449,6 +1449,28 @@ enum AVPacketSideDataType {
     AV_PKT_DATA_PRFT,
 
     /**
+     * Tile info for image reconstruction
+     * @code
+     * u32le current_tile (current tile number in row major order) [0..nb_tiles-1]
+     * u32le nb_tiles
+     * u32le grid_rows (rows in the final image grid)
+     * u32le grid_cols (cols in the final image grid)
+     * u32le tile_width
+     * u32le tile_height
+     * u32le output_width  (cropped width  of the final image)
+     * u32le output_height (cropped height of the final image)
+     * @encode
+     */
+    AV_PKT_DATA_TILE_INFO,
+
+    /**
+     * The data contains an ICC profile as an opaque octet buffer following the
+     * format described by ISO 15076-1 with an optional name defined in the
+     * metadata key entry "name".
+     */
+    AV_PKT_DATA_ICC_PROFILE,
+
+    /**
      * The number of side data types.
      * This is not part of the public API/ABI in the sense that it may
      * change when new side data types are added.

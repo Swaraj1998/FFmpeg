@@ -154,6 +154,16 @@ typedef struct MOVIndexRange {
     int64_t end;
 } MOVIndexRange;
 
+typedef struct HEICItem {
+    int item_id;
+    uint64_t pos;
+    uint64_t size;
+    uint32_t width;
+    uint32_t height;
+    int is_idat_relative;
+    int type;
+} HEICItem;
+
 typedef struct MOVStreamContext {
     AVIOContext *pb;
     int pb_is_copied;
@@ -290,6 +300,26 @@ typedef struct MOVContext {
     int decryption_key_len;
     int enable_drefs;
     int32_t movie_display_matrix[3][3]; ///< display matrix from mvhd
+    int found_iloc;         ///< 'iloc' atom has been found
+    uint64_t idat_offset;   ///< offset of 'idat' atom (non-zero if found)
+    int disable_avformat_decoding;
+    AVCodecContext *dec_ctx;
+    AVFrame *frame;         ///< final decoded frame in HEIF/HEIC
+    AVFrame *tile;
+    HEICItem *item_list;    ///< list of items in HEIF/HEIC
+    int nb_items;
+    int *tile_id_list;      ///< list containing item IDs of all tiles
+    int nb_tiles;
+    int cur_item_id;
+    int grid_item_id;
+    int primary_item_id;
+    int primary_rot;        ///< rotation angle for primary item
+    uint8_t grid_rows;
+    uint8_t grid_cols;
+    uint32_t tile_width;
+    uint32_t tile_height;
+    uint32_t output_width;
+    uint32_t output_height;
 } MOVContext;
 
 int ff_mp4_read_descr_len(AVIOContext *pb);
